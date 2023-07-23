@@ -1,0 +1,25 @@
+services:
+  kafka:
+    image: docker.io/bitnami/kafka:3.5
+    container_name: kafka
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      # - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://0.0.0.0:9092
+    labels:
+      - "traefik.enable=false"
+
+  # kafka-exporter:
+  #   image: bitnami/kafka-exporter:latest
+  #   container_name: kafka-exporter
+  #   restart: unless-stopped
+  #   labels:
+  #     - "traefik.enable=false"
+
+volumes:
+  kafka_data:
+    driver: local

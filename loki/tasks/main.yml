@@ -1,0 +1,39 @@
+- name: Ensure directories exists
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: '0644'
+  loop:
+    - ~/compose
+    - ~/compose/loki
+
+- name: Ensure directories exists
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: '0776'
+  loop:
+    - ~/compose/loki/grafana
+    - ~/compose/loki/grafana/provisioning
+
+- name: Ensure docker-compose file has been updated
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: ~/compose/loki/
+    mode: '0644'
+  loop:
+    - docker-compose.yml
+    - loki-config.yaml
+    - prometheus.yml
+    - promtail-config.yaml
+
+- name: Install loki docker driver plugin
+  ansible.builtin.shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  changed_when: true
+
+- name: Ensure loki compose files are up
+  community.docker.docker_compose:
+    state: present
+    project_src: ~/compose/loki/
+    files:
+      - docker-compose.yml

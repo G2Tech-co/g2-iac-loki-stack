@@ -1,0 +1,13 @@
+- name: Play for loki server
+  hosts: main
+  roles:
+    - essentials
+    - swap
+    - docker
+    - traefik
+    - loki
+    - mysql
+    - redis
+    - postgresql
+    - kafka
+    - reboot

@@ -1,0 +1,32 @@
+services:
+  redis:
+    image: redis:7.0.12-bookworm
+    container_name: redis
+    restart: unless-stopped
+    command:
+      - "redis-server"
+      - "--requirepass"
+      - "example"
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - "redis:/data"
+    networks:
+      - web
+    labels:
+      - "traefik.enable=false"
+
+  # redis-exporter:
+  #   image: bitnami/redis-exporter:latest
+  #   container_name: redis-exporter
+  #   restart: unless-stopped
+  #   labels:
+  #     - "traefik.enable=false"
+
+volumes:
+  redis:
+    driver: local
+
+networks:
+  web:
+    external: true
