@@ -27,9 +27,9 @@
     - prometheus.yml
     - promtail-config.yaml
 
-- name: Install loki docker driver plugin
-  ansible.builtin.shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
-  changed_when: true
+# - name: Install loki docker driver plugin
+#   ansible.builtin.shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+#   changed_when: true
 
 - name: Ensure loki compose files are up
   community.docker.docker_compose:
