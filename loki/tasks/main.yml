@@ -23,7 +23,7 @@
     mode: '0644'
   loop:
     - docker-compose.yml
-    - loki-config.yaml
+    - local-config.yaml
     - prometheus.yml
     - promtail-config.yaml
 
