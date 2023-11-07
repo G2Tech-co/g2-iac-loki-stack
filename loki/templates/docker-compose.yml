@@ -6,10 +6,10 @@ services:
     ports:
       - "127.0.0.1:3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-       - loki-data:/loki
-    depends_on:
-      - loki
+    # volumes:
+    #    - loki-data:/loki
+    # depends_on:
+    #   - loki
     labels:
       - "traefik.enable=false"
     # healthcheck:
@@ -83,7 +83,6 @@ services:
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     networks:
       - loki
-      - web
   
   renderer:
     image: grafana/grafana-image-renderer:latest
@@ -113,13 +112,10 @@ services:
       - 127.0.0.1:9090:9090
     expose:
       - 9090
-    networks:
-      - web
-
 networks:
   loki:
-  web:
-    external: true
+  # web:
+  #   external: true
 
 volumes:
   grafana-data:
