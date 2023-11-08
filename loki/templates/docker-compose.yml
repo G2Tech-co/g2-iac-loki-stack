@@ -4,7 +4,7 @@ services:
     container_name: loki
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3100:3100"
+      - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     # volumes:
     #    - loki-data:/loki
@@ -38,16 +38,16 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.0
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     container_name: grafana
     restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
-      - GF_SERVER_ROOT_URL=https://grafana.sample.co
-      - GF_SERVER_DOMAIN=grafana.sample.co
+      - GF_SERVER_ROOT_URL=
+      - GF_SERVER_DOMAIN=loki.g2-holding.co
       - GF_SECURITY_ADMIN_USER=example
       - GF_SECURITY_ADMIN_PASSWORD=example
       - GF_USERS_ALLOW_SIGN_UP=false
@@ -55,34 +55,35 @@ services:
       - GF_RENDERING_SERVER_URL=http://renderer:8081/render
       - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
       - GF_LOG_FILTERS=rendering:debug
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy 
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        EOF
-        /run.sh
+    # entrypoint:
+    #   - sh
+    #   - -euc
+    #   - |
+    #     mkdir -p /etc/grafana/provisioning/datasources
+    #     cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+    #     apiVersion: 1
+    #     datasources:
+    #     - name: Loki
+    #       type: loki
+    #       access: proxy 
+    #       orgId: 1
+    #       url: http://loki:3100
+    #       basicAuth: false
+    #       isDefault: true
+    #       version: 1
+    #       editable: false
+    #     EOF
+    #     /run.sh
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
       - "traefik.http.routers.grafana.entrypoints=http,https"
-      - "traefik.http.routers.grafana.rule=Host(`example.co`)"
+      - "traefik.http.routers.grafana.rule=Host(`sample`)"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     networks:
       - loki
+      - web
   
   renderer:
     image: grafana/grafana-image-renderer:latest
@@ -114,8 +115,8 @@ services:
       - 9090
 networks:
   loki:
-  # web:
-  #   external: true
+  web:
+    external: true
 
 volumes:
   grafana-data:

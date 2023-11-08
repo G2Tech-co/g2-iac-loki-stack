@@ -8,28 +8,28 @@ positions:
 clients:
   - url: http://loki:3100/loki/api/v1/push
 
-scrape_configs:
-  - job_name: system
-    static_configs:
-    - targets:
-        - localhost
-      labels:
-        job: varlogs
-        __path__: /var/log/*log
+# scrape_configs:
+#   - job_name: system
+#     static_configs:
+#     - targets:
+#         - localhost
+#       labels:
+#         job: varlogs
+#         __path__: /var/log/*log
 
-  - job_name: docker
-    static_configs:
-    - targets:
-        - localhost
-      labels:
-        job: dockerlogs
-        __path__: /var/lib/docker/containers/*/*.log
+#   - job_name: docker
+#     static_configs:
+#     - targets:
+#         - localhost
+#       labels:
+#         job: dockerlogs
+#         __path__: /var/lib/docker/containers/*/*.log
 
-  - job_name: docker
-    static_configs:
-    - targets:
-        - #sample ip address
-      labels:
-        job: dockerlog
-        __path__: /var/lib/docker/containers/*/*.log
+#   - job_name: docker
+#     static_configs:
+#     - targets:
+#         - #sample ip address
+#       labels:
+#         job: dockerlog
+#         __path__: /var/lib/docker/containers/*/*.log
 
